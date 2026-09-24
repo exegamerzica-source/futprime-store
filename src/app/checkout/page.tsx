@@ -13,7 +13,10 @@ function CheckoutContent() {
 
   const [paymentMethod, setPaymentMethod] = useState<"cartao" | "pix" | "whatsapp" | null>(null);
   const [formData, setFormData] = useState({ nome: "", cpf: "", email: "", whatsapp: "" });
+  
   const [pixGenerated, setPixGenerated] = useState(false);
+  const [realPixCode, setRealPixCode] = useState("");
+  const [generating, setGenerating] = useState(false);
 
   const isFormValid = formData.nome.length > 3 && formData.cpf.length >= 11 && formData.email.includes("@") && formData.whatsapp.length >= 10;
 
@@ -44,20 +47,53 @@ function CheckoutContent() {
     saveOrderToLocalStorage("cartao");
     
     setTimeout(() => {
-      if (typeof window !== 'undefined' && (window as any).PayFlow && !document.querySelector('#payflow-modal-container')) {
-         const payflowUrl = `https://linkmy-pay-vert.vercel.app/pay/dynamic?name=${encodeURIComponent(`${item} - ${platform}`)}&amount=${encodeURIComponent(price)}&customer_name=${encodeURIComponent(formData.nome)}&customer_email=${encodeURIComponent(formData.email)}&customer_cpf=${encodeURIComponent(formData.cpf.replace(/\D/g, ""))}`;
-         (window as any).PayFlow.open(payflowUrl, `Cliente: ${formData.nome}`);
-      }
+      const searchParamsObj = new URLSearchParams({
+        item: item,
+        price: price,
+        platform: platform,
+        customer_name: formData.nome,
+        customer_email: formData.email,
+        customer_cpf: formData.cpf,
+        customer_whatsapp: formData.whatsapp
+      });
+      const payflowUrl = `https://linkmy-pay-vert.vercel.app/pay/dynamic?${searchParamsObj.toString()}`;
+      
+      (window as any).PayFlow?.open(payflowUrl, "FUT Prime - Pagamento Seguro");
     }, 500);
   };
 
-  const generatePix = () => {
+  const generatePix = async () => {
     if (!isFormValid) {
       alert("Preencha todos os dados primeiro!");
       return;
     }
-    setPixGenerated(true);
-    saveOrderToLocalStorage("pix");
+    
+    setGenerating(true);
+    try {
+      const txid = "PED" + Math.floor(Math.random() * 10000);
+      const res = await fetch('/api/pix', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: price, transactionId: txid })
+      });
+      const data = await res.json();
+      
+      if (data.error) {
+        alert("Erro no PIX: Você precisa configurar sua chave PIX no painel Admin primeiro.");
+      } else {
+        setRealPixCode(data.payload);
+        setPixGenerated(true);
+        saveOrderToLocalStorage("pix");
+      }
+    } catch (err) {
+      alert("Erro ao conectar com servidor PIX.");
+    }
+    setGenerating(false);
+  };
+
+  const copyPixCode = () => {
+    navigator.clipboard.writeText(realPixCode);
+    alert("Chave Copia e Cola copiada para a área de transferência!");
   };
 
   const payWithWhatsApp = () => {
@@ -150,10 +186,6 @@ function CheckoutContent() {
               
               <button 
                 onClick={handleCartaoClick}
-                data-payflow-product={`${item} - ${platform}`}
-                data-payflow-price={price}
-                data-payflow-color="#1af45a"
-                data-payflow-label="Finalizar com Cartão"
                 className={`w-full flex items-center gap-4 bg-zinc-900 border ${paymentMethod === "cartao" ? "border-ea-green bg-zinc-800" : "border-zinc-800 hover:border-zinc-600"} p-5 rounded-2xl transition-all cursor-pointer`}
               >
                 <div className="bg-blue-500/20 p-4 rounded-xl text-blue-400">
@@ -184,11 +216,15 @@ function CheckoutContent() {
                 {paymentMethod === "pix" && (
                   <div className="p-6 border-t border-zinc-800 bg-zinc-950 flex flex-col items-center">
                     {!pixGenerated ? (
-                      <button onClick={generatePix} className="w-full bg-ea-green hover:bg-white text-black font-black uppercase tracking-widest py-4 rounded-xl transition-all shadow-lg">
-                        Gerar Código PIX
+                      <button 
+                        onClick={generatePix} 
+                        disabled={generating}
+                        className="w-full bg-ea-green hover:bg-white text-black font-black uppercase tracking-widest py-4 rounded-xl transition-all shadow-lg"
+                      >
+                        {generating ? "Gerando PIX..." : "Gerar Código PIX"}
                       </button>
                     ) : (
-                      <div className="flex flex-col items-center animate-in fade-in zoom-in duration-300">
+                      <div className="flex flex-col items-center animate-in fade-in zoom-in duration-300 w-full">
                         <div className="bg-white p-4 rounded-2xl mb-6 shadow-[0_0_30px_rgba(26,244,90,0.1)] relative">
                           <QrCode className="w-48 h-48 text-black" />
                           <div className="absolute inset-0 flex items-center justify-center opacity-10">
@@ -198,11 +234,11 @@ function CheckoutContent() {
                         <p className="text-zinc-400 text-sm text-center mb-4">
                           Escaneie o QR Code ou copie a chave PIX abaixo para pagar. O pedido será aprovado automaticamente.
                         </p>
-                        <div className="w-full max-w-md flex items-center bg-zinc-900 border border-zinc-700 rounded-xl overflow-hidden mb-2">
-                          <code className="flex-1 text-xs text-ea-green p-4 truncate">
-                            00020126580014br.gov.bcb.pix0136{Math.random().toString(36).substring(2, 15)}...
+                        <div className="w-full flex items-center bg-zinc-900 border border-zinc-700 rounded-xl overflow-hidden mb-2">
+                          <code className="flex-1 text-xs text-ea-green p-4 truncate select-all">
+                            {realPixCode}
                           </code>
-                          <button onClick={() => alert("Chave copiada!")} className="bg-ea-green hover:bg-white text-black font-bold px-6 py-4 uppercase text-xs tracking-wider transition-colors">
+                          <button onClick={copyPixCode} className="bg-ea-green hover:bg-white text-black font-bold px-6 py-4 uppercase text-xs tracking-wider transition-colors">
                             Copiar
                           </button>
                         </div>
