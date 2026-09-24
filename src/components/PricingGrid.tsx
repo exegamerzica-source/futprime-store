@@ -20,17 +20,17 @@ interface Package {
 const getPackagesForPlatform = (platform: Platform): Package[] => {
   const isPC = platform === "pc";
   return [
-    { id: "p1", coins: "100K", bonus: "30K BÔNUS", oldPrice: isPC ? 149.90 : 139.90, price: isPC ? 109.90 : 99.90, tier: "standard", numericCoins: 100000 },
-    { id: "p2", coins: "300K", bonus: "90K BÔNUS", oldPrice: isPC ? 419.90 : 389.90, price: isPC ? 319.90 : 289.90, tier: "standard", numericCoins: 300000 },
-    { id: "p3", coins: "500K", bonus: "150K BÔNUS", oldPrice: isPC ? 689.90 : 649.90, price: isPC ? 529.90 : 479.90, tier: "gold", numericCoins: 500000 },
-    { id: "p4", coins: "1000K", bonus: "300K BÔNUS", oldPrice: isPC ? 1299.90 : 1249.90, price: isPC ? 999.90 : 949.90, tier: "ultimate", numericCoins: 1000000 },
+    { id: "p1", coins: "100K", bonus: "30K BÔNUS", oldPrice: isPC ? 139.90 : 129.90, price: isPC ? 102.90 : 92.90, tier: "standard", numericCoins: 100000 },
+    { id: "p2", coins: "300K", bonus: "90K BÔNUS", oldPrice: isPC ? 399.90 : 369.90, price: isPC ? 299.90 : 269.90, tier: "standard", numericCoins: 300000 },
+    { id: "p3", coins: "500K", bonus: "150K BÔNUS", oldPrice: isPC ? 659.90 : 619.90, price: isPC ? 479.90 : 439.90, tier: "gold", numericCoins: 500000 },
+    { id: "p4", coins: "1000K", bonus: "300K BÔNUS", oldPrice: isPC ? 1199.90 : 1149.90, price: isPC ? 899.90 : 849.90, tier: "ultimate", numericCoins: 1000000 },
   ];
 };
 
 const RATE_PER_1K = {
-  playstation: 0.999,
-  xbox: 0.999,
-  pc: 1.099
+  playstation: 0.929,
+  xbox: 0.929,
+  pc: 1.029
 };
 
 export default function PricingGrid() {
