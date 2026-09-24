@@ -48,14 +48,33 @@ function CheckoutContent() {
   };
 
   const saveOrderToLocalStorage = (method: string) => {
-    const existingOrders = JSON.parse(localStorage.getItem("futprime_orders") || "[]");
-    localStorage.setItem("futprime_orders", JSON.parse(JSON.stringify([...existingOrders, {
-      id: "PED-" + Math.floor(Math.random() * 10000),
-      item, price, platform, method,
-      customer: formData,
-      status: "Pendente",
-      date: new Date().toISOString()
-    }])));
+    try {
+      const raw = localStorage.getItem("futprime_orders");
+      let existingOrders = [];
+      if (raw && raw !== "[object Object]") {
+        existingOrders = JSON.parse(raw);
+      }
+      
+      const newOrder = {
+        id: "PED-" + Math.floor(Math.random() * 10000),
+        item, price, platform, method,
+        customer: formData,
+        status: "Pendente",
+        date: new Date().toISOString()
+      };
+      
+      localStorage.setItem("futprime_orders", JSON.stringify([...existingOrders, newOrder]));
+    } catch (e) {
+      // Se estiver corrompido, reseta limpo
+      const newOrder = {
+        id: "PED-" + Math.floor(Math.random() * 10000),
+        item, price, platform, method,
+        customer: formData,
+        status: "Pendente",
+        date: new Date().toISOString()
+      };
+      localStorage.setItem("futprime_orders", JSON.stringify([newOrder]));
+    }
   };
 
   const handleCartaoClick = (e: React.MouseEvent) => {

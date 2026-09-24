@@ -49,12 +49,9 @@ export default function AdminDashboard() {
     if (!isLogged) return;
     
     // Load local orders
-    const rawOrders = localStorage.getItem("futprime_orders");
-    if (rawOrders) {
-      const parsed = JSON.parse(rawOrders);
+    try { const rawOrders = localStorage.getItem("futprime_orders"); if (rawOrders && rawOrders !== "[object Object]") { const parsed = JSON.parse(rawOrders);
       setOrders(parsed.reverse());
-      previousOrdersCount.current = parsed.length;
-    }
+      previousOrdersCount.current = parsed.length; } } catch(e) { localStorage.removeItem("futprime_orders"); }
 
     // Load Settings from Supabase
     const loadSettings = async () => {
@@ -68,15 +65,11 @@ export default function AdminDashboard() {
     loadSettings();
 
     const interval = setInterval(() => {
-      const currentRaw = localStorage.getItem("futprime_orders");
-      if (currentRaw) {
-        const parsed = JSON.parse(currentRaw);
+      try { const currentRaw = localStorage.getItem("futprime_orders"); if (currentRaw && currentRaw !== "[object Object]") { const parsed = JSON.parse(currentRaw);
         if (parsed.length > previousOrdersCount.current) {
           audioRef.current?.play().catch(() => {});
           setOrders(parsed.reverse());
-          previousOrdersCount.current = parsed.length;
-        }
-      }
+          previousOrdersCount.current = parsed.length; } } } catch(e) {}
     }, 3000);
 
     return () => clearInterval(interval);
@@ -305,6 +298,10 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+
+
+
 
 
 
