@@ -18,20 +18,19 @@ interface Package {
 }
 
 const getPackagesForPlatform = (platform: Platform): Package[] => {
-  // PlayStation e Xbox têm os mesmos preços, PC é diferente.
   const isPC = platform === "pc";
   return [
-    { id: "p1", coins: "100K", bonus: "30K BÔNUS", oldPrice: isPC ? 160.00 : 151.13, price: isPC ? 128.00 : 120.90, tier: "standard", numericCoins: 100000 },
-    { id: "p2", coins: "300K", bonus: "90K BÔNUS", oldPrice: isPC ? 480.00 : 453.38, price: isPC ? 384.00 : 362.70, tier: "standard", numericCoins: 300000 },
-    { id: "p3", coins: "500K", bonus: "150K BÔNUS", oldPrice: isPC ? 800.00 : 755.63, price: isPC ? 640.00 : 604.50, tier: "gold", numericCoins: 500000 },
-    { id: "p4", coins: "1000K", bonus: "300K BÔNUS", oldPrice: isPC ? 1600.00 : 1511.25, price: isPC ? 1280.00 : 1209.00, tier: "ultimate", numericCoins: 1000000 },
+    { id: "p1", coins: "100K", bonus: "30K BÔNUS", oldPrice: isPC ? 149.90 : 139.90, price: isPC ? 109.90 : 99.90, tier: "standard", numericCoins: 100000 },
+    { id: "p2", coins: "300K", bonus: "90K BÔNUS", oldPrice: isPC ? 419.90 : 389.90, price: isPC ? 319.90 : 289.90, tier: "standard", numericCoins: 300000 },
+    { id: "p3", coins: "500K", bonus: "150K BÔNUS", oldPrice: isPC ? 689.90 : 649.90, price: isPC ? 529.90 : 479.90, tier: "gold", numericCoins: 500000 },
+    { id: "p4", coins: "1000K", bonus: "300K BÔNUS", oldPrice: isPC ? 1299.90 : 1249.90, price: isPC ? 999.90 : 949.90, tier: "ultimate", numericCoins: 1000000 },
   ];
 };
 
 const RATE_PER_1K = {
-  playstation: 1.209,
-  xbox: 1.209,
-  pc: 1.28
+  playstation: 0.999,
+  xbox: 0.999,
+  pc: 1.099
 };
 
 export default function PricingGrid() {
@@ -53,17 +52,15 @@ export default function PricingGrid() {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto flex flex-col items-center">
+    <div id="pacotes" className="w-full max-w-6xl mx-auto flex flex-col items-center scroll-mt-24">
       
       {/* Toggle de Plataforma (3 categorias agora) */}
       <div className="flex flex-col md:flex-row items-center justify-between w-full mb-10 bg-ea-panel/80 backdrop-blur-md p-2 rounded-2xl border border-zinc-800 shadow-2xl">
         <div className="flex p-1 bg-zinc-900 rounded-xl w-full md:w-auto overflow-x-auto">
           <button
             onClick={() => setPlatform("playstation")}
-            className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${
-              platform === "playstation"
-                ? "bg-[#00439c] text-white shadow-[0_0_15px_rgba(0,67,156,0.5)]"
-                : "text-zinc-400 hover:text-white"
+            className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-bold transition-all whitespace-nowrap ${
+              platform === "playstation" ? "bg-ea-green text-black shadow-lg scale-105" : "text-zinc-400 hover:text-white hover:bg-zinc-800"
             }`}
           >
             <Gamepad2 className="w-5 h-5" />
@@ -71,25 +68,21 @@ export default function PricingGrid() {
           </button>
           <button
             onClick={() => setPlatform("xbox")}
-            className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${
-              platform === "xbox"
-                ? "bg-[#107c10] text-white shadow-[0_0_15px_rgba(16,124,16,0.5)]"
-                : "text-zinc-400 hover:text-white"
+            className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-bold transition-all whitespace-nowrap ${
+              platform === "xbox" ? "bg-ea-green text-black shadow-lg scale-105" : "text-zinc-400 hover:text-white hover:bg-zinc-800"
             }`}
           >
-            <Gamepad2 className="w-5 h-5" />
+            <Zap className="w-5 h-5" />
             Xbox
           </button>
           <button
             onClick={() => setPlatform("pc")}
-            className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-bold transition-all whitespace-nowrap ${
-              platform === "pc"
-                ? "bg-ea-green text-black shadow-[0_0_15px_rgba(26,244,90,0.3)]"
-                : "text-zinc-400 hover:text-white"
+            className={`flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-bold transition-all whitespace-nowrap ${
+              platform === "pc" ? "bg-ea-green text-black shadow-lg scale-105" : "text-zinc-400 hover:text-white hover:bg-zinc-800"
             }`}
           >
             <Monitor className="w-5 h-5" />
-            PC
+            PC / Steam
           </button>
         </div>
         

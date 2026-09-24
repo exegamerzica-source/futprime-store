@@ -9,22 +9,24 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section className="py-24 bg-zinc-900 border-y border-zinc-800 px-4">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl md:text-5xl font-black text-center mb-16">Como funciona a mágica?</h2>
+    <div id="metodo" className="w-full max-w-6xl mx-auto py-20 px-4 scroll-mt-20">
+      <h2 className="text-3xl md:text-5xl font-black text-center italic tracking-tighter uppercase mb-16 drop-shadow-md">
+        COMO FUNCIONA O <span className="text-ea-green">MÉTODO</span>?
+      </h2>
+      
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+        <div className="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-gradient-to-r from-transparent via-zinc-700 to-transparent -translate-y-1/2 -z-10" />
         
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {steps.map((step, i) => (
-            <div key={i} className="relative flex flex-col items-center text-center">
-              <div className="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center text-black mb-6 z-10 shadow-[0_0_20px_rgba(34,197,94,0.3)]">
-                {step.icon}
-              </div>
-              <h3 className="text-xl font-bold mb-2">{step.title}</h3>
-              <p className="text-zinc-400 text-sm">{step.desc}</p>
+        {steps.map((step, idx) => (
+          <div key={idx} className="flex flex-col items-center text-center bg-zinc-900/80 backdrop-blur-sm p-6 rounded-2xl border border-zinc-800 hover:border-ea-green transition-all group">
+            <div className="w-16 h-16 bg-ea-panel rounded-full flex items-center justify-center text-ea-green mb-6 border-4 border-zinc-950 group-hover:scale-110 group-hover:bg-ea-green group-hover:text-black transition-all shadow-xl">
+              {step.icon}
             </div>
-          ))}
-        </div>
+            <h3 className="text-xl font-bold text-white mb-3 tracking-tight">{step.title}</h3>
+            <p className="text-zinc-400 text-sm leading-relaxed">{step.desc}</p>
+          </div>
+        ))}
       </div>
-    </section>
+    </div>
   );
 }

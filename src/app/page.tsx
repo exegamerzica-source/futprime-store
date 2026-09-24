@@ -12,7 +12,7 @@ export default function Home() {
       
       {/* Elementos de Fundo Híbridos (Fifa + E-commerce Premium) */}
       <div className="fixed top-0 left-0 w-full h-full pointer-events-none -z-20">
-        {/* Luz de estádio superior */}
+        {/* Luz de estúdio superior */}
         <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[80vw] h-[50vh] bg-gradient-to-b from-ea-green/10 via-transparent to-transparent blur-[100px]" />
         
         {/* Mesh Gradient escuro simulando fumaça/ambientação */}
@@ -39,7 +39,7 @@ export default function Home() {
           </h1>
           
           <p className="text-lg md:text-xl text-zinc-300 mb-14 max-w-2xl font-medium drop-shadow-md">
-            Compre moedas FC 27 de forma 100% segura para PS5, Xbox e PC. Método anti-ban comprovado e envio imediato.
+            Compre moedas FC de forma 100% segura para PS5, Xbox e PC. Método anti-ban comprovado e envio imediato.
           </p>
           
           <PricingGrid />

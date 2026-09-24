@@ -8,37 +8,32 @@ export default function Benefits() {
       desc: "Transferência monitorada do começo ao fim para garantir que sua conta fique 100% segura."
     },
     {
-      icon: <PiggyBank className="w-10 h-10 text-green-500" />,
-      title: "Economia Inteligente",
-      desc: "Compre coins diretamente. Muito mais barato e garantido do que tentar a sorte nos pacotes de FIFA Points."
+      icon: <PiggyBank className="w-10 h-10 text-ea-green" />,
+      title: "O Melhor Preço do Brasil",
+      desc: "Cobrimos a concorrência. Não existe preço menor e com a mesma segurança."
     },
     {
-      icon: <BadgeCheck className="w-10 h-10 text-green-500" />,
-      title: "Garantia Total",
-      desc: "Se houver qualquer problema na entrega das suas coins, nós garantimos o seu reembolso integral."
+      icon: <BadgeCheck className="w-10 h-10 text-blue-500" />,
+      title: "Entrega Expressa",
+      desc: "95% dos nossos pedidos são concluídos em menos de 30 minutos."
     },
     {
-      icon: <Gift className="w-10 h-10 text-green-500" />,
-      title: "Bônus Exclusivos",
-      desc: "Ganhe bônus gigantes em todas as compras. Quanto mais você compra, mais moedas grátis recebe."
+      icon: <Gift className="w-10 h-10 text-purple-500" />,
+      title: "Bônus Extremos",
+      desc: "Quanto mais você compra, mais moedas bônus ganha na sua conta."
     }
   ];
 
   return (
-    <section className="py-24 px-4 max-w-7xl mx-auto">
-      <div className="text-center mb-16">
-        <h2 className="text-3xl md:text-5xl font-black mb-4">Por que escolher a nossa loja?</h2>
-        <p className="text-zinc-400 text-lg">A estrutura mais completa e segura do mercado de coins.</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <section className="bg-ea-dark border-y border-zinc-800 py-16 mt-20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-ea-green/5 to-transparent pointer-events-none" />
+      
+      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {benefits.map((b, i) => (
-          <div key={i} className="flex flex-col items-center text-center p-6 bg-zinc-900 rounded-2xl border border-zinc-800 hover:border-green-500/50 transition-colors">
-            <div className="mb-6 p-4 bg-zinc-950 rounded-full border border-zinc-800">
-              {b.icon}
-            </div>
-            <h3 className="text-xl font-bold mb-3">{b.title}</h3>
-            <p className="text-zinc-400 text-sm leading-relaxed">{b.desc}</p>
+          <div key={i} className="flex flex-col gap-4 p-6 bg-zinc-900/50 rounded-2xl border border-zinc-800 hover:bg-zinc-900 transition-colors">
+            {b.icon}
+            <h3 className="text-xl font-bold text-white">{b.title}</h3>
+            <p className="text-zinc-400 text-sm">{b.desc}</p>
           </div>
         ))}
       </div>

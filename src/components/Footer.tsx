@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Footer() {
   return (
     <footer className="bg-zinc-950 py-12 border-t border-zinc-800 text-center md:text-left px-4">
@@ -6,11 +8,13 @@ export default function Footer() {
           <div className="text-2xl font-black text-white italic tracking-tighter mb-4">
             FUT<span className="text-ea-green">PRIME</span>
           </div>
-          <p className="text-zinc-400 text-sm">A sua loja de confiança para compra de moedas EA FC 27. Segurança, rapidez e os melhores preços.</p>
+          <p className="text-zinc-400 text-sm">
+            A sua loja de confiança para compra de moedas EA FC. Segurança, rapidez e os melhores preços.
+          </p>
         </div>
         
         <div>
-          <h4 className="font-bold mb-4 uppercase tracking-widest text-xs text-white">Contato</h4>
+          <h4 className="font-bold mb-4 uppercase tracking-widest text-xs text-white">Contato Rápido</h4>
           <ul className="text-zinc-400 text-sm space-y-2">
             <li>E-mail: suporte@futprime.com.br</li>
             <li>Horário de Funcionamento: 24/7</li>
@@ -19,16 +23,23 @@ export default function Footer() {
         </div>
         
         <div>
-          <h4 className="font-bold mb-4 uppercase tracking-widest text-xs text-white">Redes Sociais</h4>
-          <ul className="text-zinc-400 text-sm space-y-2">
-            <li><a href="#" className="hover:text-ea-green">Instagram (+100 mil seguidores)</a></li>
-            <li><a href="#" className="hover:text-ea-green">Twitter</a></li>
-            <li><a href="#" className="hover:text-ea-green">TikTok</a></li>
+          <h4 className="font-bold mb-4 uppercase tracking-widest text-xs text-white">Legal</h4>
+          <ul className="text-zinc-400 text-sm space-y-2 flex flex-col">
+            <li>
+              <Link href="/termos" className="hover:text-ea-green transition-colors">
+                Termos de Uso
+              </Link>
+            </li>
+            <li>
+              <Link href="/privacidade" className="hover:text-ea-green transition-colors">
+                Política de Privacidade
+              </Link>
+            </li>
           </ul>
         </div>
       </div>
       
-      <div className="text-center text-zinc-600 text-xs mt-8">
+      <div className="text-center text-zinc-600 text-xs mt-8 pt-8 border-t border-zinc-900">
         &copy; {new Date().getFullYear()} FUT Prime. Todos os direitos reservados. Não somos afiliados à EA Sports.
       </div>
     </footer>
