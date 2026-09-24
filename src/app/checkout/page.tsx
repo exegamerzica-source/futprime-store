@@ -45,14 +45,8 @@ function CheckoutContent() {
     
     setTimeout(() => {
       if (typeof window !== 'undefined' && window.PayFlow && !document.querySelector('#payflow-modal-container')) {
-         window.PayFlow.createAndOpen(
-          "https://linkmy-pay-vert.vercel.app",
-          `${item} - ${platform}`,
-          price,
-          `Cliente: ${formData.nome}`,
-          1,
-          "modal"
-        );
+         const payflowUrl = `https://linkmy-pay-vert.vercel.app/pay/dynamic?name=${encodeURIComponent(`${item} - ${platform}`)}&amount=${encodeURIComponent(price)}&customer_name=${encodeURIComponent(formData.nome)}&customer_email=${encodeURIComponent(formData.email)}&customer_cpf=${encodeURIComponent(formData.cpf.replace(/\D/g, ""))}`;
+         window.PayFlow.open(payflowUrl, `Cliente: ${formData.nome}`);
       }
     }, 500);
   };
