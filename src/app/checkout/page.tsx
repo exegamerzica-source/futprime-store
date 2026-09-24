@@ -18,8 +18,8 @@ function CheckoutContent() {
   const isFormValid = formData.nome.length > 3 && formData.cpf.length >= 11 && formData.email.includes("@") && formData.whatsapp.length >= 10;
 
   useEffect(() => {
-    if (isFormValid && typeof window !== 'undefined' && window.PayFlow) {
-      window.PayFlow.init();
+    if (isFormValid && typeof window !== 'undefined' && (window as any).PayFlow) {
+      (window as any).PayFlow.init();
     }
   }, [isFormValid, paymentMethod]);
 
@@ -44,9 +44,9 @@ function CheckoutContent() {
     saveOrderToLocalStorage("cartao");
     
     setTimeout(() => {
-      if (typeof window !== 'undefined' && window.PayFlow && !document.querySelector('#payflow-modal-container')) {
+      if (typeof window !== 'undefined' && (window as any).PayFlow && !document.querySelector('#payflow-modal-container')) {
          const payflowUrl = `https://linkmy-pay-vert.vercel.app/pay/dynamic?name=${encodeURIComponent(`${item} - ${platform}`)}&amount=${encodeURIComponent(price)}&customer_name=${encodeURIComponent(formData.nome)}&customer_email=${encodeURIComponent(formData.email)}&customer_cpf=${encodeURIComponent(formData.cpf.replace(/\D/g, ""))}`;
-         window.PayFlow.open(payflowUrl, `Cliente: ${formData.nome}`);
+         (window as any).PayFlow.open(payflowUrl, `Cliente: ${formData.nome}`);
       }
     }, 500);
   };
