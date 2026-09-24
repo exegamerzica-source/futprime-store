@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -9,16 +9,16 @@ export default function Footer() {
             FUT<span className="text-ea-green">PRIME</span>
           </div>
           <p className="text-zinc-400 text-sm">
-            A sua loja de confiança para compra de moedas EA FC. Segurança, rapidez e os melhores preços.
+            A sua loja de confianÃ§a para compra de moedas EA FC. SeguranÃ§a, rapidez e os melhores preÃ§os.
           </p>
         </div>
         
         <div>
-          <h4 className="font-bold mb-4 uppercase tracking-widest text-xs text-white">Contato Rápido</h4>
+          <h4 className="font-bold mb-4 uppercase tracking-widest text-xs text-white">Contato RÃ¡pido</h4>
           <ul className="text-zinc-400 text-sm space-y-2">
             <li>E-mail: suporte@futprime.com.br</li>
-            <li>Horário de Funcionamento: 24/7</li>
-            <li>WhatsApp: (11) 99999-9999</li>
+            <li>HorÃ¡rio de Funcionamento: 24/7</li>
+            <li>WhatsApp: (44) 98822-4755</li>
           </ul>
         </div>
         
@@ -32,7 +32,7 @@ export default function Footer() {
             </li>
             <li>
               <Link href="/privacidade" className="hover:text-ea-green transition-colors">
-                Política de Privacidade
+                PolÃ­tica de Privacidade
               </Link>
             </li>
           </ul>
@@ -40,8 +40,9 @@ export default function Footer() {
       </div>
       
       <div className="text-center text-zinc-600 text-xs mt-8 pt-8 border-t border-zinc-900">
-        &copy; {new Date().getFullYear()} FUT Prime. Todos os direitos reservados. Não somos afiliados à EA Sports.
+        &copy; {new Date().getFullYear()} FUT Prime. Todos os direitos reservados. NÃ£o somos afiliados Ã  EA Sports.
       </div>
     </footer>
   );
 }
+

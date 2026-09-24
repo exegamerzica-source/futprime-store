@@ -17,6 +17,7 @@ function CheckoutContent() {
   const [pixGenerated, setPixGenerated] = useState(false);
   const [realPixCode, setRealPixCode] = useState("");
   const [generating, setGenerating] = useState(false);
+  const [cartaoIniciado, setCartaoIniciado] = useState(false);
 
   const isFormValid = formData.nome.length > 3 && formData.cpf.length >= 11 && formData.email.includes("@") && formData.whatsapp.length >= 10;
 
@@ -25,6 +26,11 @@ function CheckoutContent() {
       (window as any).PayFlow.init();
     }
   }, [isFormValid, paymentMethod]);
+
+  const goToSupport = () => {
+    const text = encodeURIComponent(`Olá FUT Prime! Acabei de fazer o pagamento do meu pacote de ${item} (${platform}). Meu nome é ${formData.nome} e o CPF é ${formData.cpf}. Aguardo o envio das coins!`);
+    window.open(`https://wa.me/5544988224755?text=${text}`, "_blank");
+  };
 
   const saveOrderToLocalStorage = (method: string) => {
     const existingOrders = JSON.parse(localStorage.getItem("futprime_orders") || "[]");
@@ -45,6 +51,7 @@ function CheckoutContent() {
     }
     setPaymentMethod("cartao");
     saveOrderToLocalStorage("cartao");
+    setCartaoIniciado(true);
     
     setTimeout(() => {
       const searchParamsObj = new URLSearchParams({
@@ -103,7 +110,7 @@ function CheckoutContent() {
     }
     saveOrderToLocalStorage("whatsapp");
     const text = encodeURIComponent(`Olá, quero comprar ${item} de FC 27 para ${platform}. Valor: R$ ${price}. Meu nome é ${formData.nome}.`);
-    window.open(`https://wa.me/5511999999999?text=${text}`, "_blank");
+    window.open(`https://wa.me/5544988224755?text=${text}`, "_blank");
   };
 
   return (
@@ -184,19 +191,34 @@ function CheckoutContent() {
 
             <div className="space-y-4">
               
-              <button 
-                onClick={handleCartaoClick}
-                className={`w-full flex items-center gap-4 bg-zinc-900 border ${paymentMethod === "cartao" ? "border-ea-green bg-zinc-800" : "border-zinc-800 hover:border-zinc-600"} p-5 rounded-2xl transition-all cursor-pointer`}
-              >
-                <div className="bg-blue-500/20 p-4 rounded-xl text-blue-400">
-                  <CreditCard className="w-6 h-6 pointer-events-none" />
-                </div>
-                <div className="text-left flex-1 pointer-events-none">
-                  <strong className="block text-white font-black uppercase tracking-wide">Cartão de Crédito</strong>
-                  <span className="text-zinc-400 text-sm">Aprovação imediata (Processado via PayFlow)</span>
-                </div>
-                {paymentMethod === "cartao" && <CheckCircle2 className="text-ea-green w-6 h-6 pointer-events-none" />}
-              </button>
+              <div className={`w-full bg-zinc-900 border ${paymentMethod === "cartao" ? "border-ea-green bg-zinc-800" : "border-zinc-800 hover:border-zinc-600"} rounded-2xl transition-all overflow-hidden`}>
+                <button 
+                  onClick={handleCartaoClick}
+                  className="w-full flex items-center gap-4 p-5 cursor-pointer"
+                >
+                  <div className="bg-blue-500/20 p-4 rounded-xl text-blue-400">
+                    <CreditCard className="w-6 h-6 pointer-events-none" />
+                  </div>
+                  <div className="text-left flex-1 pointer-events-none">
+                    <strong className="block text-white font-black uppercase tracking-wide">Cartão de Crédito</strong>
+                    <span className="text-zinc-400 text-sm">Aprovação imediata (Processado via PayFlow)</span>
+                  </div>
+                  {paymentMethod === "cartao" && <CheckCircle2 className="text-ea-green w-6 h-6 pointer-events-none" />}
+                </button>
+                
+                {paymentMethod === "cartao" && cartaoIniciado && (
+                  <div className="p-6 border-t border-zinc-800 bg-zinc-950 flex flex-col items-center">
+                    <p className="text-zinc-300 text-sm text-center mb-4">Se você já preencheu os dados do cartão e finalizou na janela segura, clique abaixo para agendar a entrega das coins:</p>
+                    <button 
+                      onClick={goToSupport}
+                      className="w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-400 text-black font-black uppercase tracking-widest py-4 rounded-xl transition-all shadow-lg"
+                    >
+                      <MessageCircle className="w-5 h-5" />
+                      Já paguei! Receber Moedas
+                    </button>
+                  </div>
+                )}
+              </div>
 
               <div className={`w-full bg-zinc-900 border ${paymentMethod === "pix" ? "border-ea-green bg-zinc-800" : "border-zinc-800 hover:border-zinc-600"} rounded-2xl transition-all overflow-hidden`}>
                 <button 
@@ -232,14 +254,25 @@ function CheckoutContent() {
                           </div>
                         </div>
                         <p className="text-zinc-400 text-sm text-center mb-4">
-                          Escaneie o QR Code ou copie a chave PIX abaixo para pagar. O pedido será aprovado automaticamente.
+                          Escaneie o QR Code ou copie a chave PIX abaixo para pagar.
                         </p>
-                        <div className="w-full flex items-center bg-zinc-900 border border-zinc-700 rounded-xl overflow-hidden mb-2">
+                        <div className="w-full flex items-center bg-zinc-900 border border-zinc-700 rounded-xl overflow-hidden mb-6">
                           <code className="flex-1 text-xs text-ea-green p-4 truncate select-all">
                             {realPixCode}
                           </code>
                           <button onClick={copyPixCode} className="bg-ea-green hover:bg-white text-black font-bold px-6 py-4 uppercase text-xs tracking-wider transition-colors">
                             Copiar
+                          </button>
+                        </div>
+                        
+                        <div className="w-full pt-6 border-t border-zinc-800">
+                          <p className="text-zinc-300 text-sm text-center mb-4 font-bold">Pagamento concluído?</p>
+                          <button 
+                            onClick={goToSupport}
+                            className="w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-400 text-black font-black uppercase tracking-widest py-4 rounded-xl transition-all shadow-lg shadow-green-500/20"
+                          >
+                            <MessageCircle className="w-5 h-5" />
+                            Enviar Comprovante
                           </button>
                         </div>
                       </div>
