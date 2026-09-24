@@ -1,26 +1,45 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #050505;
+  --foreground: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  
+  --color-ea-green: #1af45a;
+  --color-ea-dark: #0f1115;
+  --color-ea-panel: #161a22;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/* Utilitários para o efeito de corte diagonal (triângulo) da EA FC */
+.clip-diagonal {
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+}
+.clip-diagonal-reverse {
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%);
+}
+.clip-btn {
+  clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+}
+
+/* Padrão de fundo com triângulos sutis */
+.bg-ea-pattern {
+  background-image: 
+    linear-gradient(rgba(26, 244, 90, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26, 244, 90, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
 }
