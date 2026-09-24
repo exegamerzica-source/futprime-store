@@ -68,6 +68,11 @@ function CheckoutContent() {
     saveOrderToLocalStorage("cartao");
     
     setTimeout(() => {
+      if (!(window as any).PayFlow) {
+        alert("O servidor de pagamentos seguros (PayFlow) está iniciando. Aguarde alguns segundos ou atualize a página.");
+        return;
+      }
+      
       const searchParamsObj = new URLSearchParams({
         item: item,
         price: price,
@@ -79,8 +84,42 @@ function CheckoutContent() {
       });
       const payflowUrl = `https://linkmy-pay-vert.vercel.app/pay/dynamic?${searchParamsObj.toString()}`;
       
-      (window as any).PayFlow?.open(payflowUrl, "FUT Prime - Pagamento Seguro");
+      (window as any).PayFlow.open(payflowUrl, "FUT Prime - Pagamento Seguro");
     }, 500);
+  };
+
+  const generatePixCode = (key: string, name: string, city: string, amount: string, txid: string = "FUTPRIME") => {
+    const sanitize = (str: string) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+    name = sanitize(name).substring(0, 25);
+    city = sanitize(city).substring(0, 15);
+    amount = Number(amount).toFixed(2);
+    
+    const ID_PAYLOAD_FORMAT_INDICATOR = "000201";
+    const pixAcc = "0014br.gov.bcb.pix01" + key.length.toString().padStart(2, '0') + key;
+    const ID_MERCHANT_ACCOUNT_INFORMATION = "26" + pixAcc.length.toString().padStart(2, '0') + pixAcc;
+    const ID_MERCHANT_CATEGORY_CODE = "52040000";
+    const ID_TRANSACTION_CURRENCY = "5303986";
+    const ID_TRANSACTION_AMOUNT = "54" + amount.length.toString().padStart(2, '0') + amount;
+    const ID_COUNTRY_CODE = "5802BR";
+    const ID_MERCHANT_NAME = "59" + name.length.toString().padStart(2, '0') + name;
+    const ID_MERCHANT_CITY = "60" + city.length.toString().padStart(2, '0') + city;
+    const additional = "05" + txid.length.toString().padStart(2, '0') + txid;
+    const ID_ADDITIONAL_DATA_FIELD_TEMPLATE = "62" + additional.length.toString().padStart(2, '0') + additional;
+    
+    let payload = ID_PAYLOAD_FORMAT_INDICATOR + ID_MERCHANT_ACCOUNT_INFORMATION + ID_MERCHANT_CATEGORY_CODE + ID_TRANSACTION_CURRENCY + ID_TRANSACTION_AMOUNT + ID_COUNTRY_CODE + ID_MERCHANT_NAME + ID_MERCHANT_CITY + ID_ADDITIONAL_DATA_FIELD_TEMPLATE + "6304";
+    
+    let crc = 0xFFFF;
+    for (let i = 0; i < payload.length; i++) {
+      crc ^= payload.charCodeAt(i) << 8;
+      for (let j = 0; j < 8; j++) {
+        if ((crc & 0x8000) !== 0) {
+          crc = (crc << 1) ^ 0x1021;
+        } else {
+          crc = crc << 1;
+        }
+      }
+    }
+    return payload + (crc & 0xFFFF).toString(16).toUpperCase().padStart(4, '0');
   };
 
   const generatePix = async () => {
@@ -92,22 +131,31 @@ function CheckoutContent() {
     setGenerating(true);
     try {
       const txid = "PED" + Math.floor(Math.random() * 10000);
-      const res = await fetch('/api/pix', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: price, transactionId: txid })
-      });
-      const data = await res.json();
       
-      if (data.error) {
-        alert("Erro no PIX: Você precisa configurar sua chave PIX no painel Admin primeiro.");
-      } else {
-        setRealPixCode(data.payload);
-        setPixGenerated(true);
-        saveOrderToLocalStorage("pix");
+      // Fallback
+      let finalKey = "+5511992013539";
+      let finalName = "Vastomix ltda";
+      let finalCity = "SAO PAULO";
+
+      try {
+        const { supabase } = await import("@/lib/supabase");
+        const { data } = await supabase.from('store_settings').select('*').eq('id', 'default').single();
+        if (data && data.pix_key) {
+          finalKey = data.pix_key;
+          finalName = data.pix_name || finalName;
+          finalCity = data.pix_city || finalCity;
+        }
+      } catch(e) {
+        // Ignora banco e usa fallback
       }
-    } catch (err) {
-      alert("Erro ao conectar com servidor PIX.");
+
+      const pCode = generatePixCode(finalKey, finalName, finalCity, price, txid);
+      setRealPixCode(pCode);
+      setPixGenerated(true);
+      saveOrderToLocalStorage("pix");
+      
+    } catch (err: any) {
+      alert("Erro ao processar PIX: " + err.message);
     }
     setGenerating(false);
   };
