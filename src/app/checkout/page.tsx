@@ -329,10 +329,7 @@ function CheckoutContent() {
                     ) : (
                       <div className="flex flex-col items-center animate-in fade-in zoom-in duration-300 w-full">
                         <div className="bg-white p-4 rounded-2xl mb-6 shadow-[0_0_30px_rgba(26,244,90,0.1)] relative">
-                          <QrCode className="w-48 h-48 text-black" />
-                          <div className="absolute inset-0 flex items-center justify-center opacity-10">
-                            <ShieldCheck className="w-32 h-32 text-black" />
-                          </div>
+                          {realPixCode ? <img src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(realPixCode)}`} alt="QR Code PIX" className="w-full max-w-[200px] aspect-square object-contain mx-auto" /> : <QrCode className="w-48 h-48 text-black" />}
                         </div>
                         <p className="text-zinc-400 text-sm text-center mb-4">
                           Escaneie o QR Code ou copie a chave PIX abaixo para pagar.
