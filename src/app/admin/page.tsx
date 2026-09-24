@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState, useRef } from "react";
 import { TrendingUp, Users, DollarSign, Activity, BellRing, Settings, ShieldAlert, LogOut, CheckCircle2, Search, ArrowUpRight, Copy, Save } from "lucide-react";
@@ -101,7 +101,7 @@ export default function AdminDashboard() {
     if (error) {
       alert("Erro ao salvar: " + error.message);
     } else {
-      alert("Configurações salvas com sucesso! O site já está usando sua chave PIX real.");
+      alert("ConfiguraÃ§Ãµes salvas com sucesso! O site jÃ¡ estÃ¡ usando sua chave PIX real.");
     }
   };
 
@@ -123,6 +123,7 @@ export default function AdminDashboard() {
           <button type="submit" className="w-full bg-ea-green text-black font-black uppercase tracking-widest py-4 rounded-xl hover:bg-white transition-colors">
             Entrar no Painel
           </button>
+              <button onClick={() => { if(confirm('Zerar TUDO?')) { localStorage.removeItem('futprime_orders'); setOrders([]); } }} className="w-full bg-red-500/20 text-red-500 font-bold uppercase py-4 rounded-xl hover:bg-red-500 hover:text-white transition-colors">Zerar Faturamento e Pedidos</button>
         </form>
       </div>
     );
@@ -143,17 +144,20 @@ export default function AdminDashboard() {
           >
             <Activity className="w-5 h-5" /> Dashboard
           </button>
+              <button onClick={() => { if(confirm('Zerar TUDO?')) { localStorage.removeItem('futprime_orders'); setOrders([]); } }} className="w-full bg-red-500/20 text-red-500 font-bold uppercase py-4 rounded-xl hover:bg-red-500 hover:text-white transition-colors">Zerar Faturamento e Pedidos</button>
           <button 
             onClick={() => setActiveTab("settings")}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${activeTab === 'settings' ? 'bg-ea-green/10 text-ea-green' : 'text-zinc-400 hover:text-white hover:bg-zinc-900'}`}
           >
-            <Settings className="w-5 h-5" /> Configurações
+            <Settings className="w-5 h-5" /> ConfiguraÃ§Ãµes
           </button>
+              <button onClick={() => { if(confirm('Zerar TUDO?')) { localStorage.removeItem('futprime_orders'); setOrders([]); } }} className="w-full bg-red-500/20 text-red-500 font-bold uppercase py-4 rounded-xl hover:bg-red-500 hover:text-white transition-colors">Zerar Faturamento e Pedidos</button>
         </nav>
         <div className="p-4 border-t border-zinc-900">
           <button onClick={() => setIsLogged(false)} className="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors">
             <LogOut className="w-5 h-5" /> Sair
           </button>
+              <button onClick={() => { if(confirm('Zerar TUDO?')) { localStorage.removeItem('futprime_orders'); setOrders([]); } }} className="w-full bg-red-500/20 text-red-500 font-bold uppercase py-4 rounded-xl hover:bg-red-500 hover:text-white transition-colors">Zerar Faturamento e Pedidos</button>
         </div>
       </aside>
 
@@ -161,7 +165,7 @@ export default function AdminDashboard() {
       <main className="flex-1 p-8 overflow-y-auto">
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-black text-white uppercase tracking-tight">
-            {activeTab === 'dashboard' ? 'Visão Geral' : 'Configurações da Loja'}
+            {activeTab === 'dashboard' ? 'VisÃ£o Geral' : 'ConfiguraÃ§Ãµes da Loja'}
           </h1>
           <div className="flex items-center gap-4 bg-zinc-900 px-4 py-2 rounded-full border border-zinc-800">
             <span className="w-2 h-2 rounded-full bg-ea-green animate-pulse" />
@@ -184,14 +188,14 @@ export default function AdminDashboard() {
                 <div className="p-4 bg-blue-500/10 rounded-xl text-blue-500"><TrendingUp className="w-8 h-8" /></div>
                 <div>
                   <p className="text-sm text-zinc-500 font-bold uppercase">Pedidos Aprovados</p>
-                  <p className="text-3xl font-black text-white">124</p>
+                  <p className="text-3xl font-black text-white">{orders.length}</p>
                 </div>
               </div>
               <div className="bg-zinc-900 p-6 rounded-2xl border border-zinc-800 flex items-center gap-4">
                 <div className="p-4 bg-purple-500/10 rounded-xl text-purple-500"><Users className="w-8 h-8" /></div>
                 <div>
-                  <p className="text-sm text-zinc-500 font-bold uppercase">Taxa de Conversão</p>
-                  <p className="text-3xl font-black text-white">4.8%</p>
+                  <p className="text-sm text-zinc-500 font-bold uppercase">Ticket M&eacute;dio</p>
+                  <p className="text-3xl font-black text-white">{"R$ " + (orders.length > 0 ? (orders.reduce((acc, order) => { const p = parseFloat(order.price.replace(".", "").replace(",", ".")); return acc + (isNaN(p) ? 0 : p); }, 0) / orders.length) : 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</p>
                 </div>
               </div>
             </div>
@@ -226,7 +230,7 @@ export default function AdminDashboard() {
                 </div>
                 <div className="flex-1 overflow-y-auto pr-2 space-y-4">
                   {orders.length === 0 ? (
-                    <div className="text-center text-zinc-500 py-10 text-sm">Nenhum pedido local ainda.<br/>Faça um teste no checkout!</div>
+                    <div className="text-center text-zinc-500 py-10 text-sm">Nenhum pedido local ainda.<br/>FaÃ§a um teste no checkout!</div>
                   ) : (
                     orders.map(order => (
                       <div key={order.id} className="p-4 bg-black rounded-xl border border-zinc-800 relative group cursor-pointer hover:border-zinc-600 transition-colors">
@@ -250,7 +254,7 @@ export default function AdminDashboard() {
 
         {activeTab === 'settings' && (
           <div className="max-w-2xl bg-zinc-900 p-8 rounded-2xl border border-zinc-800">
-            <h2 className="text-xl font-bold text-white mb-6 uppercase border-b border-zinc-800 pb-4">Configuração do Recebimento (PIX)</h2>
+            <h2 className="text-xl font-bold text-white mb-6 uppercase border-b border-zinc-800 pb-4">ConfiguraÃ§Ã£o do Recebimento (PIX)</h2>
             <div className="space-y-6">
               <div>
                 <label className="block text-xs font-bold text-zinc-400 uppercase tracking-widest mb-2">Sua Chave PIX</label>
@@ -268,7 +272,7 @@ export default function AdminDashboard() {
                   type="text" 
                   value={pixName}
                   onChange={e => setPixName(e.target.value)}
-                  placeholder="Ex: João da Silva"
+                  placeholder="Ex: JoÃ£o da Silva"
                   className="w-full bg-black border border-zinc-700 rounded-xl p-4 text-white focus:border-ea-green focus:outline-none transition-colors"
                 />
               </div>
@@ -281,7 +285,7 @@ export default function AdminDashboard() {
                   placeholder="Ex: Sao Paulo"
                   className="w-full bg-black border border-zinc-700 rounded-xl p-4 text-white focus:border-ea-green focus:outline-none transition-colors"
                 />
-                <p className="text-zinc-500 text-xs mt-2">A cidade deve ser escrita sem acentos (Ex: Sao Paulo). Necessário para gerar o código Copia e Cola corretamente.</p>
+                <p className="text-zinc-500 text-xs mt-2">A cidade deve ser escrita sem acentos (Ex: Sao Paulo). NecessÃ¡rio para gerar o cÃ³digo Copia e Cola corretamente.</p>
               </div>
               
               <button 
@@ -290,8 +294,9 @@ export default function AdminDashboard() {
                 className="w-full bg-ea-green text-black font-black uppercase tracking-widest py-4 rounded-xl hover:bg-white transition-colors flex items-center justify-center gap-2"
               >
                 <Save className="w-5 h-5" />
-                {savingConfig ? 'Salvando...' : 'Salvar Configurações'}
+                {savingConfig ? 'Salvando...' : 'Salvar ConfiguraÃ§Ãµes'}
               </button>
+              <button onClick={() => { if(confirm('Zerar TUDO?')) { localStorage.removeItem('futprime_orders'); setOrders([]); } }} className="w-full bg-red-500/20 text-red-500 font-bold uppercase py-4 rounded-xl hover:bg-red-500 hover:text-white transition-colors">Zerar Faturamento e Pedidos</button>
             </div>
           </div>
         )}
@@ -300,3 +305,7 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+
+
+

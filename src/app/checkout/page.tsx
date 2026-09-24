@@ -27,6 +27,21 @@ function CheckoutContent() {
     }
   }, [isFormValid, paymentMethod]);
 
+  useEffect(() => {
+    const handleMessage = (e: MessageEvent) => {
+      if (e.data?.type === 'PAYFLOW_SUCCESS') {
+        if (typeof window !== 'undefined' && (window as any).PayFlow) {
+          (window as any).PayFlow.close();
+        }
+        setPaymentMethod("cartao");
+        setCartaoIniciado(true);
+        // We can immediately trigger WhatsApp or just show the button
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
   const goToSupport = () => {
     const text = encodeURIComponent(`Olá FUT Prime! Acabei de fazer o pagamento do meu pacote de ${item} (${platform}). Meu nome é ${formData.nome} e o CPF é ${formData.cpf}. Aguardo o envio das coins!`);
     window.open(`https://wa.me/5544988224755?text=${text}`, "_blank");
@@ -51,7 +66,6 @@ function CheckoutContent() {
     }
     setPaymentMethod("cartao");
     saveOrderToLocalStorage("cartao");
-    setCartaoIniciado(true);
     
     setTimeout(() => {
       const searchParamsObj = new URLSearchParams({
